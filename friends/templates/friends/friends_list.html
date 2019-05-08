@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<h1>현재 내가 관리하고 있는 인맥</h1>
+{% endblock %}
+
+{% block content %}
+<br>
+<h4>&nbsp;&nbsp;&nbsp;&nbsp;Today Connect!</h4>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Group</th>
+        <th scope="col">Relation</th>
+        <th scope="col">Memo</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+    {# {% if forloop.counter <= 5 %} #}
+
+    <tr>
+        <th scope="row">{{ object.id }}</th>
+        <td><a href="{% url 'friend:detail' object.id %}">{{ object.friend_name }}</a></td>
+        <td>{{ object.friend_mobile }}</td>
+        <td>{{ object.friend_group }}</td>
+        <td>{{ object.friend_relation }}</td>
+        <td>{{ object.friend_memo }}</td>
+
+    </tr>
+    {# {% endif %}  #}
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
