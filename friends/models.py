@@ -1,3 +1,5 @@
+from datetime import date, datetime
+import datetime
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -20,14 +22,31 @@ class Friends(models.Model):
     Friend = "Friend"
     Business = "Business"
     Family = "Family"
+    Another = "Another"
     RELATIONSHIP = (
         (Friend, "Friend"),
         (Business, "Business"),
         (Family, "Family"),
+        (Another, "Another")
     )
     friend_relation = models.CharField(max_length=10, choices=RELATIONSHIP, default=Business)
+    latest_connect = models.DateField(default=date.today)
     friend_memo = models.CharField(max_length=500)
-    created = models.DateField(u'Day of the event')
+    scheduled_connect = models.DateField(blank=True)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if self.friend_group == "Agroup":
+            self.scheduled_connect = self.latest_connect + datetime.timedelta(days=30)
+        elif self.friend_group == "Bgroup":
+            self.scheduled_connect = self.latest_connect + datetime.timedelta(days=60)
+        elif self.friend_group == "Cgroup":
+            self.scheduled_connect = self.latest_connect + datetime.timedelta(days=90)
+        elif self.friend_group == "Dgroup":
+            self.scheduled_connect = self.latest_connect + datetime.timedelta(days=120)
+        # 메서드를  override할 때는 꼭 super 클래스의 메서드도 호출한다.
+        # super 클래스의 메서드를 호출 하려면 super(현재클래스, self).메서드()
+        super(Friends,self).save(force_insert,force_update,using,update_fields)
 
     # def __str__(self):
     #     return "Name: " + self.friend_name +", Group: " + self.friend_group
