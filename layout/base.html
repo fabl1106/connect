@@ -33,11 +33,16 @@
         <span class="mdl-layout-title">인맥관리</span>
         <nav class="mdl-navigation">
             <a class="mdl-navigation__link" href="{% url 'friend:create' %}">인맥 추가하기</a>
-            <a class="mdl-navigation__link" href="">오늘 연락할 인맥</a>
+            <a class="mdl-navigation__link" href="{% url 'friend:index' %}">오늘 연락할 인맥</a>
             <a class="mdl-navigation__link" href="">금주 연락할 인맥</a>
             <a class="mdl-navigation__link" href="">이번 달 연락할 인맥</a>
-            <a class="mdl-navigation__link" href="{% url 'accounts:login' %}">Login</a>
+            {% if user.is_authenticated %}
             <a class="mdl-navigation__link" href="{% url 'accounts:logout' %}">Logout</a>
+            {% else %}
+            <a class="mdl-navigation__link" href="{% url 'accounts:login' %}">Login</a>
+            <a class="mdl-navigation__link" href="{% url 'accounts:signup' %}">회원가입</a>
+            {% endif %}
+
         </nav>
     </div>
     <main class="mdl-layout__content">

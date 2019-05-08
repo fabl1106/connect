@@ -2,32 +2,19 @@
 
 {% block content %}
 
-<div class="container">
-    <h1>sign up!</h1>
+<div class = row>
+    <div class = "col"></div>
+    <div class = "col-6">
+        <form action="" method="post">
+            <div class = "alert alert-info">Please enter your account information</div>
+                {% csrf_token %}
+                {{ form }}
+        <input type="submit" value="Sign up" class="btn btn-outline-info">
+        </form>
+    </div>
+    <div class = 'col'></div>
 
-    <form method='POST' action="{%url 'signup'%}">
-<!--        보안-->
-        {% csrf_token%}
-        Username:
-        <br>
-        <input name="username" type="text">
-        <br>
-        Password:
-        <br>
-        <input name='password1' type="password">
-        <br>
-        Confirm Password:
-        <br>
-        <input name='password2' type="password">
-        <br>
-        Email:
-        <br>
-        <input name='email' type="email">
-        <br><br>
-        <input type="submit" class="btn btn-primary" value="sing up">
-    </form>
 
 </div>
-
 
 {% endblock %}
