@@ -1,0 +1,47 @@
+<!--detail은 보여줘야한다. 단일 객체이다. -->
+<div class="row">
+    <div class="col">
+        <ul class="list-group">
+            <li class="list-group-item active">{{ object.friend_name }}</li>
+            <li class="list-group-item">{{ object.friend_mobile }}</li>
+            <li class="list-group-item">{{ object.friend_group }}</li>
+            <li class="list-group-item">{{ object.friend_relation }}</li>
+            <li class="list-group-item">{{ object.friend_memo }}</li>
+        </ul>
+        {#<hr>#}
+        {#<form action="{% url 'friend:comment' object.id %}" method="POST">#}
+        {#    {% csrf_token %}#}
+        {#    <input type="text" name="content" placeholder="Write your comments">#}
+        {#    <input type="submit" value="Write"/>#}
+        {##}
+        {#</form>#}
+        {#</hr>#}
+        {##}
+        {#<div class="list-group-item">#}
+        {##}
+        {#    <li class="list-group-item">#}
+        {#        <p>{{ object.comments.comment_contents }}</p>#}
+        {#        <div> {{ comment.comment_date }} </div>#}
+        {#    </li>#}
+        {##}
+        {#</div>#}
+        {#</hr>#}
+
+        <a href="{{ '/' }}" class="btn btn-secondary">돌아가기</a>
+        <!--앱 이름을 넣어줬으므로 앱 이름을 넣어줘야한다.-->
+        <a href="{% url 'friend:update' object.id %}" class="btn btn-warning">수정</a>
+        <a href="{% url 'friend:delete' object.id %}" class="btn btn-danger">삭제</a>
+
+    </div>
+    <div class="col">
+        <li class="list-group-item active">Comment</li>
+        <form action="{% url 'friend:comment' object.id %}" method="post">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <input type="submit" value="Create">&nbsp;&nbsp;
+        </form>
+    </div>
+</div>

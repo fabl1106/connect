@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content1 %}
+
+
+
+    <li class="list-group-item active">Comment</li>
+    <form action="" method="post">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <input type="submit" value="Create">&nbsp;&nbsp;
+    </form>
+    <p>{{ object.comment_contents }}</p>
+
+{% endblock %}

@@ -2,6 +2,8 @@ from datetime import date, datetime
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
+from django.http import HttpResponse
+
 
 class Friends(models.Model):
 
@@ -48,18 +50,31 @@ class Friends(models.Model):
         # super 클래스의 메서드를 호출 하려면 super(현재클래스, self).메서드()
         super(Friends,self).save(force_insert,force_update,using,update_fields)
 
-    # def __str__(self):
-    #     return "Name: " + self.friend_name +", Group: " + self.friend_group
 
-    # class Meta:
-    #     ordering = ["site_name"]
+    def updateconnect(request, id):
+        print(id)
+        model = Friends.objects.get(pk=id)
+        model.latest_connect = date.today()
+        if model.friend_group == "Agroup":
+            model.scheduled_connect = model.latest_connect + datetime.timedelta(days=30)
+        elif model.friend_group == "Bgroup":
+            model.scheduled_connect = model.latest_connect + datetime.timedelta(days=60)
+        elif model.friend_group == "Cgroup":
+            model.scheduled_connect = model.latest_connect + datetime.timedelta(days=90)
+        elif model.friend_group == "Dgroup":
+            model.scheduled_connect = model.latest_connect + datetime.timedelta(days=120)
+        super(Friends,model).save()
+        return HttpResponse(model.latest_connect)
 
 
 class Comment(models.Model):
     friend = models.ForeignKey(Friends, on_delete=models.CASCADE, related_name='friend')
     comment_created = models.DateTimeField(auto_now_add=True)
     comment_contents = models.CharField(max_length=300)
-    comment_writer = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        super(Comment, self).save(force_insert, force_update, using, update_fields)
 
     class Meta:
         ordering = ['-comment_created']

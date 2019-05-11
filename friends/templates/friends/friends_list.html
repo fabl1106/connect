@@ -1,40 +1,87 @@
 {% extends 'base.html' %}
+{% block head %}
+    <style>
+        .memo {
+            display: inline-block;
+            width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
 
+{% endblock %}
 {% block title %}
-<h1>현재 내가 관리하고 있는 인맥</h1>
+    Connect
 {% endblock %}
 
 {% block content %}
-<br>
-<h4>&nbsp;&nbsp;&nbsp;&nbsp;Today Connect!</h4>
+    <br>
+    <h4>&nbsp;&nbsp;&nbsp;&nbsp;Today Connect!</h4>
 
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">Name</th>
-        <th scope="col">Phone</th>
-        <th scope="col">Group</th>
-        <th scope="col">Relation</th>
-        <th scope="col">Memo</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for object in object_list %}
-    {# {% if forloop.counter <= 5 %} #}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Relation</th>
+            <th scope="col">최근 연락일</th>
+            <th scope="col">최근 메모</th>
+            <th scope="col">Connect!</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for object in object_list %}
+            {% if object.user == request.user %}
+                {# {% if forloop.counter <= 5 %} #}
 
-    <tr>
-        <th scope="row">{{ object.id }}</th>
-        <td><a href="{% url 'friend:detail' object.id %}">{{ object.friend_name }}</a></td>
-        <td>{{ object.friend_mobile }}</td>
-        <td>{{ object.friend_group }}</td>
-        <td>{{ object.friend_relation }}</td>
-        <td>{{ object.friend_memo }}</td>
+                <tr>
+                    {#        <th scope="row">{{ object.id }}</th>#}
+                    {#        <td><a href="{% url 'friend:detail' object.id %}">{{ object.friend_name }}</a></td>#}
+                    <td onclick="detail1('{{ object.id }}')">{{ object.friend_name }}</td>
+                    <td>{{ object.friend_mobile }}</td>
+                    <td>{{ object.friend_relation }}</td>
+                    <td id="change{{ object.id }}">{{ object.latest_connect }}</td>
+                    <td class="memo">{{ object.friend_memo }}</td>
+                    <td>
+                        <BUTTON onclick="connect('{{ object.id }}')">연락함</BUTTON>
+                    </td>
+                    {#                    <td><input type="checkbox" aria-label="Checkbox for following text input" id="Connect"></td>#}
 
-    </tr>
-    {# {% endif %}  #}
-    {% endfor %}
-    </tbody>
-</table>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+    <div id="detail1" class="col">
+        <p>1111111</p>
+    </div>
+    <script>
+        function detail1(id) {
+            $.ajax({
+                url: "/detail1/" + id,
+                method: "GET",
+                success: function (result) {
+                    $("#detail1").html(result);
+                },
+                error: function (error) {
+
+                }
+            });
+        }
+
+        function connect(id) {
+            $.ajax({
+                url: "/connect/" + id,
+                method: "GET",
+                success: function (result) {
+                    $("#change" + id).html(result);
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            });
+        }
+    </script>
 {% endblock %}
 
