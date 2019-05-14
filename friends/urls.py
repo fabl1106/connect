@@ -1,13 +1,14 @@
 from django.urls import path
 
 from friends.models import Friends
-from .views import FriendCreate, FriendDelete, FriendDetail, FriendList, FriendUpdate, FriendDetail1, FriendConnect, FriendComment
-from friends import views
+from .views import FriendCreate, FriendDelete, FriendDetail, FriendList, FriendUpdate, FriendDetail1, FriendConnect, \
+    comment_write, friends_listall
 
 
 app_name = 'friend'
 urlpatterns = [
-    path('detail/comment/<int:pk>/', FriendComment.as_view(), name='comment'),
+    path('detail/comment/<int:pk>/', comment_write, name='comment'),
+    path('listall/', friends_listall, name = 'listall'),
     path('create/', FriendCreate.as_view(), name='create'),
     path('delete/<int:pk>', FriendDelete.as_view(), name='delete'),
     path('update/<int:pk>', FriendUpdate.as_view(), name='update'),

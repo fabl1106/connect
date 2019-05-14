@@ -8,4 +8,9 @@ class FriendOptions(admin.ModelAdmin):
     search_fields = ['friend_name', 'friend_mobile', 'friend_group', 'friend_memo']
 
 admin.site.register(Friends, FriendOptions)
-admin.site.register(Comment)
+
+class CommentOption(admin.ModelAdmin):
+    list_display = ['id', 'friend', 'comment_contents']
+    list_filter = ['friend', 'comment_contents']
+
+admin.site.register(Comment, CommentOption)

@@ -1,24 +1,19 @@
 {% extends 'base.html' %}
-{% block head %}
-    <style>
-        .memo {
-            display: inline-block;
-            width: 150px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-    </style>
 
-{% endblock %}
-{% block title %}
-    Connect
-{% endblock %}
+
 
 {% block content %}
-    <br>
-    <h4>&nbsp;&nbsp;&nbsp;&nbsp;Today Connect!</h4>
 
+   <br>
+    <h4>&nbsp;&nbsp;&nbsp;&nbsp;전체 친구 목록 보기</h4>
+
+    <form action="" method="get" id="search_form" class="form-inline my-2 my-lg-0 float-right">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" name="search_key">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>&nbsp;&nbsp;&nbsp;
+    </form>
+    <br>
+    <br>
+    <br>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -31,7 +26,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for object in object_list %}
+        {% for object in Friends_list %}
             {% if object.user == request.user %}
                 {# {% if forloop.counter <= 5 %} #}
 
@@ -53,36 +48,13 @@
         {% endfor %}
         </tbody>
     </table>
-    <div id="detail1" class="col">
-        {% load static %}
-        <p><img src="{% static 'images/main.jpeg' %}" style="max-width:100%;height:auto;"></p>
-    </div>
-    <script>
-        function detail1(id) {
-            $.ajax({
-                url: "/detail1/" + id,
-                method: "GET",
-                success: function (result) {
-                    $("#detail1").html(result);
-                },
-                error: function (error) {
 
-                }
-            });
-        }
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {% for page in page_range %}
+        <li class="page-item"><a class="page-link" href="{% url 'friend:index' %}?page={{page}}">{{page}}</a></li>
+        {% endfor %}
+    </ul>
+</nav>
 
-        function connect(id) {
-            $.ajax({
-                url: "/connect/" + id,
-                method: "GET",
-                success: function (result) {
-                    $("#change" + id).html(result);
-                },
-                error: function (error) {
-                    console.log(error)
-                }
-            });
-        }
-    </script>
 {% endblock %}
-

@@ -13,6 +13,33 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
+
+{% load static %}
+
+    <style>
+    .btn-like{
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        background:url({% static 'images/touching1.png' %});
+        text-indent: -9999px;
+        background-position: -50px -400px;
+        overflow:hidden;
+        border:none;
+    }
+    .btn-like.active{
+    display: inline-block;
+        width: 50px;
+        height: 50px;
+        background:url({% static 'images/touching2.png' %});
+        text-indent: -9999px;
+        background-position: -50px -400px;
+        overflow:hidden;
+        border:none;
+    }
+
+    </style>
+
 <!-- No header, and the drawer stays open on larger screens (fixed drawer). -->
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer
             mdl-layout--fixed-header">
@@ -34,11 +61,16 @@
     </header>
     <div class="mdl-layout__drawer">
         <span class="mdl-layout-title">인맥관리</span>
+
+        <span class="mdl-layout-title">{{ user.username }}</span>
+        <div style="text-align:justify">{{ user.email }}</div>
+
         <nav class="mdl-navigation">
             <a class="mdl-navigation__link" href="{% url 'friend:create' %}">인맥 추가하기</a>
             <a class="mdl-navigation__link" href="{% url 'friend:index' %}">오늘 연락할 인맥</a>
             <a class="mdl-navigation__link" href="">금주 연락할 인맥</a>
             <a class="mdl-navigation__link" href="">이번 달 연락할 인맥</a>
+            <a class="mdl-navigation__link" href="{% url 'friend:listall' %}">전체 인맥 보기</a>
             {% if user.is_authenticated %}
             <a class="mdl-navigation__link" href="{% url 'accounts:logout' %}">Logout</a>
             {% else %}
