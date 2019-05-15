@@ -10,11 +10,37 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.db.models import Q
 import math
+from datetime import date, datetime, timedelta
 
 
 class FriendList(ListView):
     model = Friends
     template_name_suffix = "_list"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_list'] = Friends.objects.filter(scheduled_connect__lte=date.today())
+        return context
+
+
+class FriendWeekList(ListView):
+    model = Friends
+    template_name_suffix = "_weeklist"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_list'] = Friends.objects.filter(scheduled_connect__lte=date.today(), scheduled_connect__gte=date.today()-timedelta(days=7))
+        return context
+
+
+class FriendMonthList(ListView):
+    model = Friends
+    template_name_suffix = "_monthlist"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_list'] = Friends.objects.filter(scheduled_connect__lte=date.today(), scheduled_connect__gte=date.today()-timedelta(days=30))
+        return context
 
 
 class FriendCreate(CreateView):

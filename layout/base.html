@@ -68,8 +68,8 @@
         <nav class="mdl-navigation">
             <a class="mdl-navigation__link" href="{% url 'friend:create' %}">인맥 추가하기</a>
             <a class="mdl-navigation__link" href="{% url 'friend:index' %}">오늘 연락할 인맥</a>
-            <a class="mdl-navigation__link" href="">금주 연락할 인맥</a>
-            <a class="mdl-navigation__link" href="">이번 달 연락할 인맥</a>
+            <a class="mdl-navigation__link" href="{% url 'friend:weeklist' %}">금주 연락할 인맥</a>
+            <a class="mdl-navigation__link" href="{% url 'friend:monthlist' %}">이번 달 연락할 인맥</a>
             <a class="mdl-navigation__link" href="{% url 'friend:listall' %}">전체 인맥 보기</a>
             {% if user.is_authenticated %}
             <a class="mdl-navigation__link" href="{% url 'accounts:logout' %}">Logout</a>

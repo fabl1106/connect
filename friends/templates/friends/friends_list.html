@@ -26,6 +26,7 @@
             <th scope="col">Phone</th>
             <th scope="col">Relation</th>
             <th scope="col">최근 연락일</th>
+            <th scope="col">연락 예정</th>
             <th scope="col">최근 메모</th>
             <th scope="col">Connect!</th>
         </tr>
@@ -34,7 +35,7 @@
         {% for object in object_list %}
             {% if object.user == request.user %}
                 {# {% if forloop.counter <= 5 %} #}
-
+{#                {% if object.scheduled_connect < datetime.now %}#}
                 <tr>
                     {#        <th scope="row">{{ object.id }}</th>#}
                     {#        <td><a href="{% url 'friend:detail' object.id %}">{{ object.friend_name }}</a></td>#}
@@ -42,6 +43,7 @@
                     <td>{{ object.friend_mobile }}</td>
                     <td>{{ object.friend_relation }}</td>
                     <td id="change{{ object.id }}">{{ object.latest_connect }}</td>
+                    <td>{{ object.scheduled_connect }}</td>
                     <td class="memo">{{ object.friend_memo }}</td>
                     <td>
                         <BUTTON onclick="connect('{{ object.id }}')">연락함</BUTTON>
@@ -49,6 +51,7 @@
                     {#                    <td><input type="checkbox" aria-label="Checkbox for following text input" id="Connect"></td>#}
 
                 </tr>
+{#                {% endif %}#}
             {% endif %}
         {% endfor %}
         </tbody>
