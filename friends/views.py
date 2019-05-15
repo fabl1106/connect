@@ -58,11 +58,23 @@ class FriendDetail1(DetailView):
     model = Friends
     template_name = 'friends/friends_detail1.html'
 
-    def get(self, request, pk,):
-        comment = Comment.objects.all()
-        friend = Friends.objects.get(id=pk)
-        return render(request, self.template_name, {"Comment":comment,'object':friend})
+    # def get(self, request, pk,):
+    #     comment = Comment.objects.all()
+    #     context_data = self.get_context_data()
+    #     context_data['Comment'] = Comment.objects.all()
+    #     friend = Friends.objects.get(id=pk)
+    #     return render(request, self.template_name, context_data)
 
+    # 데이터만 넘겨받는 방법이다.
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['Comment'] = Comment.objects.all()
+        return context
+
+    # def get(self, request, pk,):
+    #     comment = Comment.objects.all()
+    #     friend = Friends.objects.get(id=pk)
+    #     return render(request, self.template_name, {"Comment":comment, "object":friend})
 
 def FriendConnect(request, pk):
     model = Friends
