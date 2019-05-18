@@ -1,16 +1,20 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, request
 from django.shortcuts import render, get_object_or_404, redirect, get_list_or_404
-
+from django.views.generic.base import View, TemplateResponseMixin
+from django.views.generic import TemplateView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
+
+from friends.forms import CommentForm
 from .models import Friends, Comment
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.db.models import Q
 import math
 from datetime import date, datetime, timedelta
+
 
 
 class FriendList(ListView):
@@ -77,7 +81,44 @@ class FriendDelete(DeleteView):
 
 class FriendDetail(DetailView):
     model = Friends
-    template_name_suffix = '_detail'
+    template_name = 'friends/friends_detail.html'
+
+
+    def dispatch(self, request, *args, **kwargs):
+        #url에서 설정해준 주소로 바든ㄴ다.
+        friend_id = kwargs['pk']
+        friend = get_object_or_404(Friends, pk=friend_id)
+
+        if request.method == "POST":
+            comment_contents = request.POST.get('comment_contents')
+            Comment.objects.create(friend=friend, comment_contents=comment_contents)
+
+        comment = friend.friend.all()
+        comment_form = CommentForm()
+        return render(request, "friends/friends_detail.html", {'Comment': comment, 'object': friend, 'form': comment_form})
+
+    #
+    # def get(self, request, *args, **kwargs):
+    #     friend_id = kwargs['friend_id']
+    #     print("f_id : {}".format(friend_id))
+    #     friend = get_object_or_404(Friends, pk=friend_id)
+    #     print("friend : {}".format(friend))
+    #     comment = friend.comment.all()
+    #     print("comment : {}".format(comment))
+    #
+    #
+    # def post(self, request, *args, **kwargs):
+    #     friend_id = kwargs['friend_id']
+    #     friend = get_object_or_404(Friends, pk = friend_id)
+    #     comment_contents = request.POST.get('comment')
+    #
+    #     if not comment_contents:
+    #         messages.info(request, "You don't write anything...")
+    #         return HttpResponseRedirect(reverse_lazy('friend:detail', args=[friend_id]))
+    #         Comment.objects.create(friend=friend, comment_contents=comment_contents)
+    #
+    #     comment = Comment.objects.all()
+    #     return render(request, "friends/friends_detail.html", {'Comment': comment, 'object': friend})
 
 
 class FriendDetail1(DetailView):
@@ -94,7 +135,7 @@ class FriendDetail1(DetailView):
     # 데이터만 넘겨받는 방법이다.
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['Comment'] = Comment.objects.all()
+        context['Comment'] = context['object'].friend.all()
         return context
 
     # def get(self, request, pk,):

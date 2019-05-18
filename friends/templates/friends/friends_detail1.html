@@ -44,9 +44,9 @@
         </form>
         </li>
         {% for comment in Comment %}
-            {% if comment.friend_id == object.id %}
-        <li class="list-group-item"> {{  comment.comment_contents }} {{ comment.comment_created }}</li>
-            {% endif %}
+
+            <li class="list-group-item"> {{  comment.comment_contents }} {{ comment.comment_created }}</li>
+
         {% endfor %}
     </div>
 </div>

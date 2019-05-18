@@ -39,7 +39,7 @@
                 <tr>
                     {#        <th scope="row">{{ object.id }}</th>#}
                     {#        <td><a href="{% url 'friend:detail' object.id %}">{{ object.friend_name }}</a></td>#}
-                    <td onclick="detail1('{{ object.id }}')">{{ object.friend_name }}</td>
+                    <td><a href="{% url 'friend:detail' object.id%}"> {{ object.friend_name }}</a></td>
                     <td>{{ object.friend_mobile }}</td>
                     <td>{{ object.friend_relation }}</td>
                     <td id="change{{ object.id }}">{{ object.latest_connect }}</td>
