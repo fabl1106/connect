@@ -43,7 +43,7 @@
                     <td>{{ object.friend_mobile }}</td>
                     <td>{{ object.friend_relation }}</td>
                     <td id="change{{ object.id }}">{{ object.latest_connect }}</td>
-                    <td>{{ object.scheduled_connect }}</td>
+                    <td id="scheduled{{ object.id }}">{{ object.scheduled_connect }}</td>
                     <td class="memo">{{ object.friend_memo }}</td>
                     <td>
                         <BUTTON onclick="connect('{{ object.id }}')">연락함</BUTTON>
@@ -86,7 +86,7 @@
             </a>
         </div>
     </div>
-    <script>
+     <script type="text/javascript">
         function detail1(id) {
             $.ajax({
                 url: "/detail1/" + id,
@@ -105,13 +105,16 @@
                 url: "/connect/" + id,
                 method: "GET",
                 success: function (result) {
-                    $("#change" + id).html(result);
+                    $("#change" + id).html(result.latest_connect);
+                    $("#scheduled" + id).html(result.scheduled_connect);
                 },
                 error: function (error) {
                     console.log(error)
                 }
             });
         }
+
+
     </script>
 {% endblock %}
 

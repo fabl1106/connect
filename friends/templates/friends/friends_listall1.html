@@ -1,24 +1,19 @@
 {% extends 'base.html' %}
-{% block head %}
-    <style>
-        .memo {
-            display: inline-block;
-            width: 250px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-    </style>
 
-{% endblock %}
-{% block title %}
-    Connect
-{% endblock %}
+
 
 {% block content %}
-    <br>
-    <h4>&nbsp;&nbsp;&nbsp;&nbsp;이번 주 Connect!</h4>
 
+   <br>
+    <h4>&nbsp;&nbsp;&nbsp;&nbsp;전체 친구 목록 보기</h4>
+
+    <form action="" method="get" id="search_form" class="form-inline my-2 my-lg-0 float-right">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" name="search_key">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>&nbsp;&nbsp;&nbsp;
+    </form>
+    <br>
+    <br>
+    <br>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -26,16 +21,15 @@
             <th scope="col">Phone</th>
             <th scope="col">Relation</th>
             <th scope="col">최근 연락일</th>
-            <th scope="col">연락 예정</th>
             <th scope="col">최근 메모</th>
             <th scope="col">Connect!</th>
         </tr>
         </thead>
         <tbody>
-        {% for object in object_list %}
+        {% for object in Friends_list %}
             {% if object.user == request.user %}
                 {# {% if forloop.counter <= 5 %} #}
-{#                {% if object.scheduled_connect < datetime.now %}#}
+
                 <tr>
                     {#        <th scope="row">{{ object.id }}</th>#}
                     {#        <td><a href="{% url 'friend:detail' object.id %}">{{ object.friend_name }}</a></td>#}
@@ -43,37 +37,24 @@
                     <td>{{ object.friend_mobile }}</td>
                     <td>{{ object.friend_relation }}</td>
                     <td id="change{{ object.id }}">{{ object.latest_connect }}</td>
-                    <td id="scheduled{{ object.id }}">{{ object.scheduled_connect }}</td>
                     <td class="memo">{{ object.friend_memo }}</td>
-                     <td>
-                        <BUTTON onclick="connect('{{ object.id }}')">연락함</BUTTON>
+                    <td>
+                        <BUTTON onclick="connect('{{ object.id }}')" >연락함</BUTTON>
                     </td>
-
                     {#                    <td><input type="checkbox" aria-label="Checkbox for following text input" id="Connect"></td>#}
 
                 </tr>
-{#                {% endif %}#}
             {% endif %}
         {% endfor %}
         </tbody>
     </table>
 
-    <script type="text/javascript">
-        function connect(id) {
-            $.ajax({
-                url: "/connect/" + id,
-                method: "GET",
-                success: function (result) {
-                    $("#change" + id).html(result.latest_connect);
-                    $("#scheduled" + id).html(result.scheduled_connect);
-                },
-                error: function (error) {
-                    console.log(error)
-                }
-            });
-        }
-
-
-    </script>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {% for page in page_range %}
+        <li class="page-item"><a class="page-link" href="{% url 'friend:listall' %}?page={{page}}">{{page}}</a></li>
+        {% endfor %}
+    </ul>
+</nav>
 
 {% endblock %}

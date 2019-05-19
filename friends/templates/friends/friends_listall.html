@@ -26,8 +26,8 @@
         </tr>
         </thead>
         <tbody>
-        {% for object in Friends_list %}
-            {% if object.user == request.user %}
+        {% for object in friends %}
+{#            {% if object.user == request.user %}#}
                 {# {% if forloop.counter <= 5 %} #}
 
                 <tr>
@@ -37,6 +37,7 @@
                     <td>{{ object.friend_mobile }}</td>
                     <td>{{ object.friend_relation }}</td>
                     <td id="change{{ object.id }}">{{ object.latest_connect }}</td>
+                    <td id="scheduled{{ object.id }}">{{ object.scheduled_connect }}</td>
                     <td class="memo">{{ object.friend_memo }}</td>
                     <td>
                         <BUTTON onclick="connect('{{ object.id }}')" >연락함</BUTTON>
@@ -44,17 +45,49 @@
                     {#                    <td><input type="checkbox" aria-label="Checkbox for following text input" id="Connect"></td>#}
 
                 </tr>
-            {% endif %}
+{#            {% endif %}#}
         {% endfor %}
         </tbody>
     </table>
 
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
-        {% for page in page_range %}
-        <li class="page-item"><a class="page-link" href="{% url 'friend:listall' %}?page={{page}}">{{page}}</a></li>
-        {% endfor %}
+        {% if friends.has_previous %}
+            <li><a href="?page=1"><<</a></li>
+            <p style="margin:0 5px 0 5px"></p>
+            <li><a href="?page={{ friends.previous_page_number }}"><</a></li>
+            <p style="margin:0 5px 0 5px"></p>
+        {% endif %}
+
+        <span class="current">
+            Page {{ friends.number }} of {{ friends.paginator.num_pages }}.
+        </span>
+
+        {% if friends.has_next %}
+            <p style="margin:0 5px 0 5px"></p>
+            <li><a href="?page={{ friends.next_page_number }}"> > </a></li>
+            <p style="margin:0 5px 0 5px"></p>
+            <li><a href="?page={{ friends.paginator.num_pages }}"> >> </a></li>
+        {% endif %}
+    </span>
     </ul>
 </nav>
+     <script type="text/javascript">
+        function connect(id) {
+            $.ajax({
+                url: "/connect/" + id,
+                method: "GET",
+                success: function (result) {
+                    $("#change" + id).html(result.latest_connect);
+                    $("#scheduled" + id).html(result.scheduled_connect);
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            });
+        }
+
+
+    </script>
 
 {% endblock %}

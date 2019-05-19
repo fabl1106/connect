@@ -1,5 +1,7 @@
+import time
+
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, request
+from django.http import HttpResponseRedirect, request, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect, get_list_or_404
 from django.views.generic.base import View, TemplateResponseMixin
 from django.views.generic import TemplateView
@@ -33,7 +35,19 @@ class FriendWeekList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['object_list'] = Friends.objects.filter(scheduled_connect__lte=date.today(), scheduled_connect__gte=date.today()-timedelta(days=7))
+
+        now = time.localtime()
+
+        week = ('월', '화', '수', '목', '금', '토', '일')
+        week1 = {'월':0 , '화':1, '수':2, '목':3, '금':4, '토':5, '일':6 }
+        today = (week[now.tm_wday])
+        day = date.today().strftime('%d')
+        month = date.today().strftime('%m')
+
+        monday = int(day) - week1[today]
+        sunday = monday + 6
+
+        context['object_list'] = Friends.objects.filter(scheduled_connect__month=month,scheduled_connect__day__gte=monday, scheduled_connect__day__lte=sunday)
         return context
 
 
@@ -43,8 +57,15 @@ class FriendMonthList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['object_list'] = Friends.objects.filter(scheduled_connect__lte=date.today(), scheduled_connect__gte=date.today()-timedelta(days=30))
+
+        month = date.today().strftime('%m')
+
+        context['object_list'] = Friends.objects.filter(scheduled_connect__month=month,
+                                                        scheduled_connect__day__gte=1,
+                                                        scheduled_connect__day__lte=32)
         return context
+
+
 
 
 class FriendCreate(CreateView):
@@ -162,24 +183,28 @@ def FriendConnect(request, pk):
 #
 #             return self.render_to_response({'form': form})
 
+from django.template.loader import render_to_string
 
 def comment_write(request, pk):
+
     if request.method == "POST":
+        is_ajax = request.POST.get('is_ajax')
         friend = get_object_or_404(Friends, id=pk)
         comment_contents = request.POST.get('comment')
-        print(friend)
-        if not comment_contents:
-            messages.info(request, "You don't write anything...")
-            return HttpResponseRedirect(reverse_lazy('friend:detail', args=[pk]))
-        else:
-            Comment.objects.create(friend=friend, comment_contents=comment_contents)
-        comment = Comment.objects.all()
+
+        if comment_contents:
+            comment1 = Comment.objects.create(friend=friend, comment_contents=comment_contents)
+            comment = Comment.objects.all()
+        if is_ajax:
+            html = render_to_string('friends/comment/comment_single.html', {'comment':comment1})
+            return JsonResponse({'html':html})
+
     return render(request,"friends/friends_detail1.html", {'Comment':comment,'object':friend})
 
 #여기서는 리다이렉트만 시켜주고 db는 detail1에서 띄어주도록 한다.
 # 그냥 단순히 friends_detail로 이동하게 되니 , 있어야 할 값들이 없어서 그렇다.(generic view이기 때문에 알아서 생성해주는 값들이 없어서 ㄱ
 
-def friends_listall(request):
+def friends_listall1(request):
 
     page = int(request.GET.get('page', 1))
 
@@ -207,3 +232,16 @@ def friends_listall(request):
 
     return render(request, 'friends/friends_listall.html',
                   {'Friends_list': Friends_list, 'total_page': total_page, 'page_range': page_range})
+
+from django.core.paginator import Paginator
+from django.shortcuts import render
+
+def friends_listall(request):
+
+        Friends_list = Friends.objects.filter(user=request.user.id)
+
+        paginator = Paginator(Friends_list, 10)  # Show 25 contacts per page
+
+        page = request.GET.get('page')
+        friends = paginator.get_page(page)
+        return render(request, 'friends/friends_listall.html', {'friends': friends})

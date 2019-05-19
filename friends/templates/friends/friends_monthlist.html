@@ -43,8 +43,11 @@
                     <td>{{ object.friend_mobile }}</td>
                     <td>{{ object.friend_relation }}</td>
                     <td id="change{{ object.id }}">{{ object.latest_connect }}</td>
-                    <td>{{ object.scheduled_connect }}</td>
+                    <td id="scheduled{{ object.id }}">{{ object.scheduled_connect }}</td>
                     <td class="memo">{{ object.friend_memo }}</td>
+                    <td>
+                        <BUTTON onclick="connect('{{ object.id }}')">연락함</BUTTON>
+                    </td>
 
                     {#                    <td><input type="checkbox" aria-label="Checkbox for following text input" id="Connect"></td>#}
 
@@ -54,4 +57,23 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <script type="text/javascript">
+        function connect(id) {
+            $.ajax({
+                url: "/connect/" + id,
+                method: "GET",
+                success: function (result) {
+                    $("#change" + id).html(result.latest_connect);
+                    $("#scheduled" + id).html(result.scheduled_connect);
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            });
+        }
+
+
+    </script>
+
 {% endblock %}

@@ -2,7 +2,7 @@ from datetime import date, datetime
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 
 class Friends(models.Model):
@@ -64,7 +64,7 @@ class Friends(models.Model):
         elif model.friend_group == "Dgroup":
             model.scheduled_connect = model.latest_connect + datetime.timedelta(days=120)
         super(Friends,model).save()
-        return HttpResponse(model.latest_connect)
+        return JsonResponse({"latest_connect":model.latest_connect, "scheduled_connect":model.scheduled_connect})
 
 
 class Comment(models.Model):

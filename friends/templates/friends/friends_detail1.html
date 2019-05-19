@@ -10,43 +10,60 @@
             <li class="list-group-item">연락 예정일 : {{ object.scheduled_connect }}</li>
             <li class="list-group-item">메모 : {{ object.friend_memo }}</li>
         </ul>
-        {#<hr>#}
-        {#<form action="{% url 'friend:comment' object.id %}" method="POST">#}
-        {#    {% csrf_token %}#}
-        {#    <input type="text" name="content" placeholder="Write your comments">#}
-        {#    <input type="submit" value="Write"/>#}
-        {##}
-        {#</form>#}
-        {#</hr>#}
-        {##}
-        {#<div class="list-group-item">#}
-        {##}
-        {#    <li class="list-group-item">#}
-        {#        <p>{{ object.comments.comment_contents }}</p>#}
-        {#        <div> {{ comment.comment_date }} </div>#}
-        {#    </li>#}
-        {##}
-        {#</div>#}
-        {#</hr>#}
-
         <a href="{{ '/' }}" class="btn btn-secondary">돌아가기</a>
         <a href="{% url 'friend:update' object.id %}" class="btn btn-warning">수정</a>
         <a href="{% url 'friend:delete' object.id %}" class="btn btn-danger">삭제</a>
 
     </div>
     <div class="col">
+        <ul class="list-group">
         <li class="list-group-item active">Comment</li>
         <li class="list-group-item">
-        <form action="{% url "friend:comment" object.id %}" method="post">
+        <form action="{% url "friend:comment" object.id %}" method="post" id="comment_form">
             {% csrf_token %}
-            <input type="text" name="comment" placeholder="오늘 {{object.friend_name}}님은 어떠셨나요?" style="width:200px;">
+            <input type="hidden" name="is_ajax" value="">
+            <input type="text" id="id_text" name="comment" placeholder="오늘 {{object.friend_name}}님은 어떠셨나요?" style="width:200px;">
             <input type="submit" value="메모남기기">&nbsp;&nbsp;
         </form>
         </li>
+{#    <table class="table table-striped" id="comment_list">#}
+{#    <tbody>#}
+    <div id="comment_list">
         {% for comment in Comment %}
 
             <li class="list-group-item"> {{  comment.comment_contents }} {{ comment.comment_created }}</li>
 
         {% endfor %}
     </div>
+        </ul>
+
+{#    </tbody>#}
+{#    </table>#}
+    </div>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#comment_form').submit(function (e) {
+            $('input[name="is_ajax"]').val("1")
+            // alert('댓글쓰기 완료');
+            url = $(this).attr('action'); //원래 다녀와야하는 url
+            params = $(this).serialize(); //현재 폼에 담겨있는 값들을 가지고 올 수 있게 해준다.
+            $.ajax({
+                url: url,
+                method: "POST",
+                data: params,
+
+            }).done(function (data) {
+                $('#id_text').val("");
+                $('#comment_list').prepend(data.html); //시작지점에 요소 끼워넣기
+                //$('comment_list tbody').append(tr); // 끝 지점에 요소 끼워넣기
+                // is_ajax 값 초기화
+                $('input[name="is_ajax"]').val("");
+            });
+
+            return false;
+
+        });
+    });
+        </script>
