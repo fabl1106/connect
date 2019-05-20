@@ -1,2 +1,4 @@
 
-<li class="list-group-item"> {{  comment.comment_contents }} {{ comment.comment_created }}</li>
+<li class="list-group-item"> <td class="comment_text">{{  comment.comment_contents }}</td> {{ comment.comment_created }} &nbsp;&nbsp;
+                            <a href="{% url  'friend:comment_delete' object.id %}" class="btn_comment_delete">삭제</a>&nbsp;&nbsp;
+                            <a href="{% url  'friend:comment_update' object.id %}" class="btn_comment_update">수정</a></li></li>

@@ -9,6 +9,7 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 
+import friends
 from friends.forms import CommentForm
 from .models import Friends, Comment
 from django.contrib import messages
@@ -203,6 +204,46 @@ def comment_write(request, pk):
 
 #여기서는 리다이렉트만 시켜주고 db는 detail1에서 띄어주도록 한다.
 # 그냥 단순히 friends_detail로 이동하게 되니 , 있어야 할 값들이 없어서 그렇다.(generic view이기 때문에 알아서 생성해주는 값들이 없어서 ㄱ
+def comment_update(request, pk):
+    is_ajax, data =(request.GET.get('is_ajax'), request.GET) if 'is_ajax' \
+    in request.GET else (request.POST.get('is_ajax', False), request.POST)
+
+    comment = get_object_or_404(Comment, id = pk)
+    friend = get_object_or_404(Friends, id = comment.friend_id)
+
+    if is_ajax:
+        comment.comment_contents = data['text']
+        form = CommentForm(instance=comment)
+        # form = CommentForm(data, instance=comment)
+        if form.is_valid():
+            form.save()
+        return JsonResponse({"works":True})
+
+    if request.method == "POST":
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect(friends)
+    else:
+        form = CommentForm(instance=comment)
+    return render(request,'friends/comment/comment_update.html',{'form':form})
+
+
+def comment_delete(request, pk):
+    is_ajax = request.GET.get('is_ajax') if 'is_ajax' in request.GET else request.POST.get('is_ajax', False)
+    comment = get_object_or_404(Comment, id=pk)
+    # friend = get_object_or_404(Friends, id=pk)
+
+    if is_ajax:
+        comment.delete()
+        return JsonResponse({"works":True})
+
+    if request.method == "POST":
+        comment.delete()
+        return redirect(friends)
+    else:
+        return render(request, 'friends/comment/comment_delete.html', {'object':comment})
+
 
 def friends_listall1(request):
 
@@ -245,3 +286,5 @@ def friends_listall(request):
         page = request.GET.get('page')
         friends = paginator.get_page(page)
         return render(request, 'friends/friends_listall.html', {'friends': friends})
+
+

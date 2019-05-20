@@ -1,37 +1,107 @@
 {% extends 'base.html' %}
 
 {% block content1 %}
+    <div class="row">
+        <div class="col">
+            <ul class="list-group">
+                <li class="list-group-item active">{{ object.friend_name }}</li>
+                <li class="list-group-item">연락처 : {{ object.friend_mobile }}</li>
+                <li class="list-group-item">그룹 : {{ object.friend_group }}</li>
+                <li class="list-group-item">관계 : {{ object.friend_relation }}</li>
+                <li class="list-group-item">최근 연락일 : {{ object.latest_connect }}</li>
+                <li class="list-group-item">연락 예정일 : {{ object.scheduled_connect }}</li>
+                <li class="list-group-item">메모 : {{ object.friend_memo }}</li>
+            </ul>
+            <a href="{{ '/' }}" class="btn btn-secondary">돌아가기</a>
+            <!--앱 이름을 넣어줬으므로 앱 이름을 넣어줘야한다.-->
+            <a href="{% url 'friend:update' object.id %}" class="btn btn-warning">수정</a>
+            <a href="{% url 'friend:delete' object.id %}" class="btn btn-danger">삭제</a>
+        </div>
+        <div class="col">
+            <ul class="list-group">
+                <li class="list-group-item active">Comment</li>
+                <li class="list-group-item">
+                    <form action="" method="post">
+                        {% csrf_token %}
 
-    <!--detail은 보여줘야한다. 단일 객체이다. -->
-    <ul class="list-group">
-        <li class="list-group-item active">{{ object.friend_name }}</li>
-        <li class="list-group-item">연락처 : {{ object.friend_mobile }}</li>
-        <li class="list-group-item">그룹 : {{ object.friend_group }}</li>
-        <li class="list-group-item">관계 : {{ object.friend_relation }}</li>
-        <li class="list-group-item">최근 연락일 : {{ object.latest_connect }}</li>
-        <li class="list-group-item">연락 예정일 : {{ object.scheduled_connect }}</li>
-        <li class="list-group-item">메모 : {{ object.friend_memo }}</li>
-    </ul>
-    <hr>
-    <form action="" method="post">
-        {% csrf_token %}
+                        {{ form }}
+                        <input type="submit" value="Comment" class="btn btn-outline-primary">
+                    </form>
+                </li>
+                {% for comment in Comment %}
+                    {% if comment.friend_id == object.id %}
+                        <li class="list-group-item" id="comment">
+                        <table>
+                            <tr>
+                             <td class="test">{{ comment.comment_contents }}</td>
+                              <td>  {{ comment.comment_created }} &nbsp;&nbsp;</td>
+                            <td><a href="{% url  'friend:comment_delete' comment.id %}" class="btn_comment_delete">삭제</a>&nbsp;&nbsp;</td>
+                            <td><a href="{% url  'friend:comment_update' comment.id %}" class="btn_comment_update">수정</a></td>
+                            </tr>
+                        </table>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
 
-        {{ form }}
-        <input type="submit" value="Comment" class="btn btn-outline-primary">
-    </form>
-    </li>
-    {% for comment in Comment %}
-        {% if comment.friend_id == object.id %}
-            <li class="list-group-item"> {{ comment.comment_contents }} {{ comment.comment_created }}</li>
-        {% endif %}
-    {% endfor %}
-    </hr>
-    <br>
-    <br>
 
-    <a href="{{ '/' }}" class="btn btn-secondary">돌아가기</a>
-    <!--앱 이름을 넣어줬으므로 앱 이름을 넣어줘야한다.-->
-    <a href="{% url 'friend:update' object.id %}" class="btn btn-warning">수정</a>
-    <a href="{% url 'friend:delete' object.id %}" class="btn btn-danger">삭제</a>
+    </div>
+{% endblock %}
 
+{% block extra_script %}
+<script type="text/javascript">
+    $(function () {
+        $('.btn_comment_delete').click(function(e){
+            e.preventDefault();
+            var input = confirm('댓글을 삭제하시겠습니까?');
+            if (input == true) {
+                alert('댓글을 삭제하였습니다.');
+                comment = $(this).parents('#comment'); //버튼을 감사고 있는 tr 찾기
+                url = $(this).attr('href') + "?is_ajax=1"; //ajax호출임을 구분할 수 있게 값 추가
+
+                $.ajax({
+                    url: url,
+                }).done(function (data) {
+                    if (data.works) {
+                        comment.remove(); //해당 객체 지우기
+                    }
+                });
+            }
+        });
+        $('.btn_comment_update').click(function (e) {
+            e.preventDefault();
+            console.log("update event")
+            url = $(this).attr('href') + "?is_ajax=1"; //ajax호출임을 구분할 수 있게 값 추가;
+
+            {#parent = $(this).parent()#}
+            {#console.log(parent)#}
+            {##}
+            {#target = parent.siblings('.test')#}
+            {#console.log(target)#}
+            comment = $(this).parent().siblings('.test');
+            {#comment = $(this).parents().siblings('.test'); //원래 댓글을 찾음#}
+            console.log(comment)
+            input = "<input type='text' id='update_text' value='"+comment.text()+"'>";
+            comment.html(input);
+            $('#update_text').keypress(function (e) {
+                console.log(e.code)
+                if (e.code == "Enter") {
+                    text = $(this).val();
+                    $.ajax({
+                        url: url,
+                        data: {
+                            text: text
+                        }
+                    }).done(function (data) {
+                        if (data.works) {
+                            comment.text(text);
+                        }
+                    });
+                }
+
+            });
+        });
+    });
+</script>
 {% endblock %}

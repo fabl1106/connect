@@ -3,6 +3,7 @@ import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
+from django.urls import reverse
 
 
 class Friends(models.Model):
@@ -65,6 +66,10 @@ class Friends(models.Model):
             model.scheduled_connect = model.latest_connect + datetime.timedelta(days=120)
         super(Friends,model).save()
         return JsonResponse({"latest_connect":model.latest_connect, "scheduled_connect":model.scheduled_connect})
+
+
+    def get_absolute_url(self):
+        return reverse('friend:detail', args=[self.id])
 
 
 class Comment(models.Model):
