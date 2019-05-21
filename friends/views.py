@@ -271,7 +271,7 @@ def friends_listall1(request):
 
     Friends_list = Friends_list[start_index:end_index]
 
-    return render(request, 'friends/friends_listall.html',
+    return render(request, 'friends/friends_listall1.html',
                   {'Friends_list': Friends_list, 'total_page': total_page, 'page_range': page_range})
 
 from django.core.paginator import Paginator
@@ -283,8 +283,22 @@ def friends_listall(request):
 
         paginator = Paginator(Friends_list, 10)  # Show 25 contacts per page
 
+        search_key = request.GET.get('search_key', None)
+        friend_name_q = Q(friend_name__icontains=search_key)
+        friend_mobile_q = Q(friend_mobile__icontains=search_key)
+        friend_memo_q = Q(friend_memo__icontains=search_key)
+
+        if search_key:
+            # documents = Document.objects.filter(title_q | text_q)
+            Friends_list = get_list_or_404(Friends, friend_name_q | friend_mobile_q | friend_memo_q)
+        else:
+            # documents = get_list_or_404(Document,title__contains="1")
+            Friends_list = get_list_or_404(Friends)
+
         page = request.GET.get('page')
         friends = paginator.get_page(page)
-        return render(request, 'friends/friends_listall.html', {'friends': friends})
+        return render(request, 'friends/friends_listall.html', {'friends': friends, 'Friends_list': Friends_list})
+
+
 
 
