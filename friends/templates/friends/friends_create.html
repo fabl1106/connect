@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
+    <div style = "padding: 100px 100px 100px 400px">
+    <p>{{ user.username }}님의 소중한 인연을 한분 한분 더해주세요!</p>
+    &nbsp;
+    &nbsp;
     <form action="" method="post">
         {% csrf_token %}
 
         {{form.as_p}}
         <input type="submit" value="Create">&nbsp;&nbsp; <a href="{{'/'}}">돌아가기</a>
     </form>
+    </div>
 {% endblock %}

@@ -19,10 +19,13 @@ import math
 from datetime import date, datetime, timedelta
 
 
-
-class FriendList(ListView):
+class Main(ListView):
     model = Friends
-    template_name_suffix = "_list"
+    template_name_suffix = "_main"
+
+class FriendTodayList(ListView):
+    model = Friends
+    template_name_suffix = "_todaylist"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -48,9 +51,12 @@ class FriendWeekList(ListView):
         monday = int(day) - week1[today]
         sunday = monday + 6
 
-        context['object_list'] = Friends.objects.filter(scheduled_connect__month=month,scheduled_connect__day__gte=monday, scheduled_connect__day__lte=sunday)
+        this_week_q = Q(scheduled_connect__month=month,scheduled_connect__day__gte=monday, scheduled_connect__day__lte=sunday)
+        past_day_q = Q(scheduled_connect__lte=date.today())
+        this_week_connected_q = Q(latest_connect__month=month, latest_connect__day__gte=monday, latest_connect__day__lte=sunday)
+        context['object_list'] = Friends.objects.filter(this_week_q | past_day_q)
+        context['this_week_connected'] = Friends.objects.filter(this_week_connected_q)
         return context
-
 
 class FriendMonthList(ListView):
     model = Friends
@@ -61,9 +67,14 @@ class FriendMonthList(ListView):
 
         month = date.today().strftime('%m')
 
-        context['object_list'] = Friends.objects.filter(scheduled_connect__month=month,
+        this_month_q = Q(scheduled_connect__month=month,
                                                         scheduled_connect__day__gte=1,
                                                         scheduled_connect__day__lte=32)
+        past_day_q = Q(scheduled_connect__lte=date.today())
+
+        this_month_connected_q = Q(latest_connect__month=month, latest_connect__day__gte=1,latest_connect__day__lte=32)
+        context['object_list'] = Friends.objects.filter(this_month_q | past_day_q)
+        context['this_month_connected'] = Friends.objects.filter(this_month_connected_q)
         return context
 
 
@@ -245,34 +256,6 @@ def comment_delete(request, pk):
         return render(request, 'friends/comment/comment_delete.html', {'object':comment})
 
 
-def friends_listall1(request):
-
-    page = int(request.GET.get('page', 1))
-
-    paginated_by = 10
-
-    search_key = request.GET.get('search_key', None)
-    friend_name_q = Q(friend_name__icontains=search_key)
-    friend_mobile_q = Q(friend_mobile__icontains=search_key)
-    friend_memo_q = Q(friend_memo__icontains=search_key)
-
-    if search_key:
-        # documents = Document.objects.filter(title_q | text_q)
-        Friends_list = get_list_or_404(Friends, friend_name_q | friend_mobile_q | friend_memo_q)
-    else:
-        # documents = get_list_or_404(Document,title__contains="1")
-        Friends_list = get_list_or_404(Friends)
-
-    total_count = len(Friends_list)
-    total_page = math.ceil(total_count / paginated_by)
-    page_range = range(1, total_page + 1)
-    start_index = paginated_by * (page - 1)
-    end_index = paginated_by * page
-
-    Friends_list = Friends_list[start_index:end_index]
-
-    return render(request, 'friends/friends_listall1.html',
-                  {'Friends_list': Friends_list, 'total_page': total_page, 'page_range': page_range})
 
 from django.core.paginator import Paginator
 from django.shortcuts import render
@@ -281,8 +264,6 @@ def friends_listall(request):
 
         Friends_list = Friends.objects.filter(user=request.user.id)
 
-        paginator = Paginator(Friends_list, 10)  # Show 25 contacts per page
-
         search_key = request.GET.get('search_key', None)
         friend_name_q = Q(friend_name__icontains=search_key)
         friend_mobile_q = Q(friend_mobile__icontains=search_key)
@@ -290,15 +271,48 @@ def friends_listall(request):
 
         if search_key:
             # documents = Document.objects.filter(title_q | text_q)
-            Friends_list = get_list_or_404(Friends, friend_name_q | friend_mobile_q | friend_memo_q)
+            Friends_list1 = get_list_or_404(Friends_list, friend_name_q | friend_mobile_q | friend_memo_q)
         else:
             # documents = get_list_or_404(Document,title__contains="1")
-            Friends_list = get_list_or_404(Friends)
+            Friends_list1 = get_list_or_404(Friends_list)
+
+        paginator = Paginator(Friends_list1, 10)  # Show 25 contacts per page
 
         page = request.GET.get('page')
         friends = paginator.get_page(page)
-        return render(request, 'friends/friends_listall.html', {'friends': friends, 'Friends_list': Friends_list})
 
 
+
+        return render(request, 'friends/friends_listall.html', {'friends': friends})
+
+
+# def friends_listall1(request):
+#
+#     page = int(request.GET.get('page', 1))
+#
+#     paginated_by = 10
+#
+#     search_key = request.GET.get('search_key', None)
+#     friend_name_q = Q(friend_name__icontains=search_key)
+#     friend_mobile_q = Q(friend_mobile__icontains=search_key)
+#     friend_memo_q = Q(friend_memo__icontains=search_key)
+#
+#     if search_key:
+#         # documents = Document.objects.filter(title_q | text_q)
+#         Friends_list = get_list_or_404(Friends, friend_name_q | friend_mobile_q | friend_memo_q)
+#     else:
+#         # documents = get_list_or_404(Document,title__contains="1")
+#         Friends_list = get_list_or_404(Friends)
+#
+#     total_count = len(Friends_list)
+#     total_page = math.ceil(total_count / paginated_by)
+#     page_range = range(1, total_page + 1)
+#     start_index = paginated_by * (page - 1)
+#     end_index = paginated_by * page
+#
+#     Friends_list = Friends_list[start_index:end_index]
+#
+#     return render(request, 'friends/friends_listall1.html',
+#                   {'Friends_list': Friends_list, 'total_page': total_page, 'page_range': page_range})
 
 

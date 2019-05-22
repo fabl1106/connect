@@ -17,7 +17,9 @@
 
 {% block content %}
     <br>
-    <h4>&nbsp;&nbsp;&nbsp;&nbsp;이번 달 Connect!</h4>
+    <h2>
+        <div style="padding: 15px 0px 20px 10px">This Month Connect !</div>
+    </h2>
 
     <table class="table table-striped">
         <thead>
@@ -27,19 +29,19 @@
             <th scope="col">Relation</th>
             <th scope="col">최근 연락일</th>
             <th scope="col">연락 예정</th>
-            <th scope="col">최근 메모</th>
-            <th scope="col">Connect!</th>
+            <th scope="col">최근 소식</th>
+            <th scope="col">연락하셨나요?</th>
         </tr>
         </thead>
         <tbody>
         {% for object in object_list %}
             {% if object.user == request.user %}
                 {# {% if forloop.counter <= 5 %} #}
-{#                {% if object.scheduled_connect < datetime.now %}#}
+                {#                {% if object.scheduled_connect < datetime.now %}#}
                 <tr>
                     {#        <th scope="row">{{ object.id }}</th>#}
                     {#        <td><a href="{% url 'friend:detail' object.id %}">{{ object.friend_name }}</a></td>#}
-                    <td><a href="{% url 'friend:detail' object.id%}"> {{ object.friend_name }}</a></td>
+                    <td><a href="{% url 'friend:detail' object.id %}"> {{ object.friend_name }}</a></td>
                     <td>{{ object.friend_mobile }}</td>
                     <td>{{ object.friend_relation }}</td>
                     <td id="change{{ object.id }}">{{ object.latest_connect }}</td>
@@ -52,11 +54,58 @@
                     {#                    <td><input type="checkbox" aria-label="Checkbox for following text input" id="Connect"></td>#}
 
                 </tr>
-{#                {% endif %}#}
+                {#                {% endif %}#}
             {% endif %}
         {% endfor %}
         </tbody>
     </table>
+
+    <h2>
+        <div style="padding: 15px 0px 20px 10px">This Month Connected !!</div>
+    </h2>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Relation</th>
+            <th scope="col">최근 연락일</th>
+            <th scope="col">연락 예정</th>
+            <th scope="col">최근 소식</th>
+            <th scope="col">연락하셨나요?</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for object in this_month_connected %}
+            {% if object.user == request.user %}
+                {# {% if forloop.counter <= 5 %} #}
+                {#                {% if object.scheduled_connect < datetime.now %}#}
+                <tr>
+                    {#        <th scope="row">{{ object.id }}</th>#}
+                    {#        <td><a href="{% url 'friend:detail' object.id %}">{{ object.friend_name }}</a></td>#}
+                    <td><a href="{% url 'friend:detail' object.id %}"> {{ object.friend_name }}</a></td>
+                    <td>{{ object.friend_mobile }}</td>
+                    <td>{{ object.friend_relation }}</td>
+                    <td id="change{{ object.id }}">{{ object.latest_connect }}</td>
+                    <td id="scheduled{{ object.id }}">{{ object.scheduled_connect }}</td>
+                    <td class="memo">{{ object.friend_memo }}</td>
+                    <td>
+                        <BUTTON onclick="connect('{{ object.id }}')">연락함</BUTTON>
+                    </td>
+
+                    {#                    <td><input type="checkbox" aria-label="Checkbox for following text input" id="Connect"></td>#}
+
+                </tr>
+                {#                {% endif %}#}
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+
 
     <script type="text/javascript">
         function connect(id) {
