@@ -44,7 +44,7 @@
                     <td>{{ object.friend_relation }}</td>
                     <td id="change{{ object.id }}">{{ object.latest_connect }}</td>
                     <td id="scheduled{{ object.id }}">{{ object.scheduled_connect }}</td>
-                    <td class="memo">{{ object.friend_memo }}</td>
+                    <td class="memo">{{ object.recently_comment.comment_contents }}</td>
                      <td>
                         <BUTTON onclick="connect('{{ object.id }}')">연락함</BUTTON>
                     </td>
@@ -85,7 +85,7 @@
                     <td>{{ object.friend_relation }}</td>
                     <td id="change{{ object.id }}">{{ object.latest_connect }}</td>
                     <td id="scheduled{{ object.id }}">{{ object.scheduled_connect }}</td>
-                    <td class="memo">{{ object.friend_memo }}</td>
+                    <td class="memo">{{ object.recently_comments.comment_contents }}</td>
                      <td>
                         <BUTTON onclick="connect('{{ object.id }}')">연락함</BUTTON>
                     </td>
