@@ -279,7 +279,9 @@ from django.core.paginator import Paginator
 from django.shortcuts import render
 
 def friends_listall(request):
-
+    if not request.user.is_authenticated:
+        return render(request, 'friends/friends_listall.html')
+    else:
         Friends_list = Friends.objects.filter(user=request.user.id)
 
         search_key = request.GET.get('search_key', None)
