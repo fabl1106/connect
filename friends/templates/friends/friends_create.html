@@ -1,43 +1,75 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class = row>
-    <div class=col style="padding: 100px 50px 100px 200px">
+    <div class=row>
+        <div class=col style="padding: 100px 50px 100px 200px">
+            {% if user.is_authenticated %}
+                <p>{{ user.username }}님의 소중한 인연을 한분 한분 더해주세요!</p>
+                <br>
+                <p>친구 등록 안내</p>
+                <p>더욱 더 소중한 인연일수록 A그룹에 가깝게 입력해주세요!</p>
+                <p>Connect에서 매일 매일,</p>
+                <p>소중한 인연을 이어갈 수 있도록 알려드릴 거에요</p>
+                <p>최근 연락일은 부담 없이 생각나는 대략적인 날짜만</p>
+                <p>넣어주시면 됩니다 :)</p>
+                <br>
+                <p>어리석은 사람은 인연을 만나고도 몰라보고</p>
+                <p>보통 사람은 인연인 줄 알면서도 놓치고</p>
+                <p>현명한 사람은 옷깃만 스쳐도 인연을 살려낸다. -피천득</p>
+            {% else %}
+                <p>여기는 회원님의 소중한 인연들을 추가하는 페이지에요!</p>
+                <br>
+                <p>자신의 전화부를 돌아보며 정말 소중한 인연들을 돌아보며</p>
+                <p>한분 한분 소중히 더해주시면 됩니다 :) </p>
+                <p>과연 나에게 소중한 인연들은 얼마나 될지 궁금하시죠?</p>
+                <p>그럼 나중에 회원가입 후 한분 한분 더해주세요!</p>
+                <p>회원 가입 이후에 좀 더 자세한 안내를 드릴게요.</p>
+                <br>
+                <p>어리석은 사람은 인연을 만나고도 몰라보고</p>
+                <p>보통 사람은 인연인 줄 알면서도 놓치고</p>
+                <p>현명한 사람은 옷깃만 스쳐도 인연을 살려낸다. -피천득</p>
+            {% endif %}
+        </div>
         {% if user.is_authenticated %}
-            <p>{{ user.username }}님의 소중한 인연을 한분 한분 더해주세요!</p>
-            <br>
-            <p>친구 등록 안내</p>
-            <p>더욱 더 소중한 인연일수록 A그룹에 가깝게 입력해주세요!</p>
-            <p>Connect에서 매일 매일,</p>
-            <p>소중한 인연을 이어갈 수 있도록 알려드릴 거에요</p>
-            <p>최근 연락일은 부담 없이 생각나는 대략적인 날짜만</p>
-            <p>넣어주시면 됩니다 :)</p>
-            <br>
-            <p>어리석은 사람은 인연을 만나고도 몰라보고</p>
-            <p>보통 사람은 인연인 줄 알면서도 놓치고</p>
-            <p>현명한 사람은 옷깃만 스쳐도 인연을 살려낸다. -피천득</p>
+
+            <div class=col style="padding: 120px 100px 0px 100px">
+                {#        &nbsp;\#}
+                {#        &nbsp;#}
+                <form action="" method="post">
+                    {% csrf_token %}
+
+                    {{ form.as_p }}
+                    <input type="submit" value="Create">&nbsp;&nbsp; <a href="{{ '/' }}">돌아가기</a>
+                </form>
+            </div>
         {% else %}
-            <p>여기는 회원님의 소중한 인연들을 추가하는 페이지에요!</p>
-            <br>
-            <p>자신의 전화부를 돌아보며 정말 소중한 인연들을 돌아보며</p>
-            <p>한분 한분 소중히 더해주시면 됩니다 :) </p>
-            <p>과연 나에게 소중한 인연들은 얼마나 될지 궁금하시죠?</p>
-            <p>그럼 나중에 회원가입 후 한분 한분 더해주세요!</p>
-            <p>회원 가입 이후에 좀 더 자세한 안내를 드릴게요.</p>
-            <br>
-            <p>어리석은 사람은 인연을 만나고도 몰라보고</p>
-            <p>보통 사람은 인연인 줄 알면서도 놓치고</p>
-            <p>현명한 사람은 옷깃만 스쳐도 인연을 살려낸다. -피천득</p>
+            <div class=col style="padding: 120px 100px 0px 100px">
+                {#        &nbsp;\#}
+                {#        &nbsp;#}
+                <form action="" method="post" id="close">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+{#                    <p>친구이름 : {{ form.friend_name }}</p>#}
+{#                    <p>친구 연락처 : {{ form.friend_mobile }}</p>#}
+{#                    <p>친구 그룹 : {{ form.friend_group }}</p>#}
+{#                    <div class="form-group">#}
+{#                        <label for="exampleFormControlInput1">친구이름</label>#}
+{#                        <div class="form-control" id="exampleFormControlInput1"#}
+{#                             placeholder="name@example.com">{{ form.friend_mobile }}</div>#}
+{#                    </div>#}
+                    <input type="submit" value="Create">&nbsp;&nbsp; <a href="{{ '/' }}">돌아가기</a>
+                </form>
+            </div>
         {% endif %}
     </div>
-    <div class=col style="padding: 120px 100px 0px 100px">
-{#        &nbsp;\#}
-{#        &nbsp;#}
-        <form action="" method="post">
-            {% csrf_token %}
+{% endblock %}
 
-            {{ form.as_p }}
-            <input type="submit" value="Create">&nbsp;&nbsp; <a href="{{ '/' }}">돌아가기</a>
-        </form>
-    </div>
-</div>
+{% block extra_script %}
+    <script type="text/javascript">
+        $(function () {
+            $('#close').submit(function (e) {
+                e.preventDefault();
+                var input = confirm('저의 프로그래밍 실력을 시험하시는거죠...? 훗훗 회원가입 후 이용 할 수 있도록 저가 다 막아놨죠 :)');
+            });
+        });
+    </script>
 {% endblock %}

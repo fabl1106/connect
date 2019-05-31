@@ -17,7 +17,7 @@
 {% block content %}
 
     {% load static %}
-    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="5000">
         <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -26,16 +26,16 @@
         </ol>
         <div class="carousel-inner" data-interval="5000">
             <div class="carousel-item active" data-interval="5000">
-                <img src="{% static 'images/main2.jpeg' %}" class="d-block w-100" alt="...">
+                <img src="{% static 'images/main1.png' %}" class="d-block w-100" alt="...">
             </div>
             <div class="carousel-item" data-interval="5000">
-                <img src="{% static 'images/main3.jpeg' %}" class="d-block w-100" alt="...">
+                <img src="{% static 'images/main2.png' %}" class="d-block w-100" alt="...">
             </div>
             <div class="carousel-item" data-interval="5000">
-                <img src="{% static 'images/main4.jpeg' %}" class="d-block w-100" alt="...">
+                <img src="{% static 'images/main3.png' %}" class="d-block w-100" alt="...">
             </div>
             <div class="carousel-item" data-interval="5000">
-                <img src="{% static 'images/main5.jpeg' %}" class="d-block w-100" alt="...">
+                <img src="{% static 'images/main4.png' %}" class="d-block w-100" alt="...">
             </div>
         </div>
         <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -47,5 +47,6 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
+    <div style="padding: 10px 0px 0px 70%"> 불편사항 및 피드백을 보내주세요! deaguowl@gmail.com</div>
 
 {% endblock %}

@@ -13,8 +13,8 @@ class CommentInline(admin.TabularInline):
 
 class FriendOptions(admin.ModelAdmin):
 
-    list_display = ['id', 'friend_name', 'friend_mobile', 'friend_group', 'friend_memo']
-    list_filter = ['friend_name', 'friend_mobile', 'friend_group','friend_memo']
+    list_display = ['user', 'friend_name', 'friend_mobile', 'friend_group', 'friend_memo']
+    list_filter = ['user','friend_name', 'friend_mobile', 'friend_group','friend_memo']
     search_fields = ['friend_name', 'friend_mobile', 'friend_group', 'friend_memo']
     inlines = [CommentInline]
 

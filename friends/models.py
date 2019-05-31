@@ -10,7 +10,7 @@ class Friends(models.Model):
 
     friend_name = models.CharField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
-    friend_mobile = models.CharField(max_length=13) #12자리만 받으려면 어떻게 해야하지?
+    friend_mobile = models.CharField(max_length=13, default="010-0000-0000") #12자리만 받으려면 어떻게 해야하지?
     Agroup = "Agroup"
     Bgroup = "Bgroup"
     Cgroup = "Cgroup"
@@ -73,8 +73,8 @@ class Friends(models.Model):
 
 
 class Comment(models.Model):
-    friend = models.ForeignKey(Friends, on_delete=models.CASCADE, related_name='friend')
-    comment_created = models.DateTimeField(auto_now_add=True)
+    friend = models.ForeignKey(Friends, on_delete=models.CASCADE, related_name='comment')
+    comment_created = models.DateField(auto_now_add=True)
     comment_contents = models.CharField(max_length=300)
 
     def save(self, force_insert=False, force_update=False, using=None,

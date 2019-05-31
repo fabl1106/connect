@@ -55,7 +55,7 @@ def miles_graph():
         if numfind.match(line): # this line is distances
             dist=line.split()
             for d in dist:
-                if float(d) < 300: # connect if closer then 300 miles
+                if float(d) < 300: # config if closer then 300 miles
                     G.add_edge(city,cities[i])
                 i=i+1
         else: # this line is a city, position, population

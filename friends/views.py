@@ -31,7 +31,7 @@ class FriendTodayList(ListView):
         context = super().get_context_data(**kwargs)
         context['object_list'] = Friends.objects.filter(scheduled_connect__lte=date.today())
         for object in context['object_list']:
-            object.recently_comment = object.friend.all()[0] if object.friend.all() else None
+            object.recently_comment = object.comment.all()[0] if object.comment.all() else None
         return context
 
 
@@ -59,9 +59,9 @@ class FriendWeekList(ListView):
         context['object_list'] = Friends.objects.filter(this_week_q | past_day_q)
         context['this_week_connected'] = Friends.objects.filter(this_week_connected_q)
         for object in context['object_list']:
-            object.recently_comment = object.friend.all()[0] if object.friend.all() else None
+            object.recently_comment = object.comment.all()[0] if object.comment.all() else None
         for object in context['this_week_connected']:
-            object.recently_comments = object.friend.all()[0] if object.friend.all() else None
+            object.recently_comments = object.comment.all()[0] if object.comment.all() else None
         return context
 
 class FriendMonthList(ListView):
@@ -90,9 +90,9 @@ class FriendMonthList(ListView):
         context['object_list'] = Friends.objects.filter(this_month_q | past_day_q)
         context['this_month_connected'] = Friends.objects.filter(this_month_connected_q)
         for object in context['object_list']:
-            object.recently_comment = object.friend.all()[0] if object.friend.all() else None
+            object.recently_comment = object.comment.all()[0] if object.comment.all() else None
         for object in context['this_month_connected']:
-            object.recently_comments = object.friend.all()[0] if object.friend.all() else None
+            object.recently_comments = object.comment.all()[0] if object.comment.all() else None
         return context
 
 
@@ -144,7 +144,7 @@ class FriendDetail(DetailView):
             comment_contents = request.POST.get('comment_contents')
             Comment.objects.create(friend=friend, comment_contents=comment_contents)
 
-        comment = friend.friend.all()
+        comment = friend.comment.all()
         comment_form = CommentForm()
         return render(request, "friends/friends_detail.html", {'Comment': comment, 'object': friend, 'form': comment_form})
 
@@ -186,7 +186,7 @@ class FriendDetail1(DetailView):
     # 데이터만 넘겨받는 방법이다.
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['Comment'] = context['object'].friend.all()
+        context['Comment'] = context['object'].comment.all()
         return context
 
     # def get(self, request, pk,):
@@ -283,6 +283,9 @@ def friends_listall(request):
         return render(request, 'friends/friends_listall.html')
     else:
         Friends_list = Friends.objects.filter(user=request.user.id)
+
+        if not Friends_list:
+            return render(request, 'friends/friends_listall.html')
 
         search_key = request.GET.get('search_key', None)
         friend_name_q = Q(friend_name__icontains=search_key)
