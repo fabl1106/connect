@@ -1,8 +1,9 @@
 *.pvc
 *~
-/venv
+/myvenv
 __pychache__
 db.sqlite3
 .DS_Store
 git
 .idea/
+settings.py
