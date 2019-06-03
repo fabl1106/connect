@@ -18,7 +18,7 @@
 {% block content %}
     <br>
     <h2>
-        <div style="padding: 15px 0px 20px 0px">This Month Connect !</div>
+        <div style="padding: 15px 0px 20px 0px" id="title">This Month Connect !</div>
     </h2>
     {% if user.is_authenticated %}
         <p>{{ user.username }}님, 이번 달에는 꼭 연락주실거죠? 기다리구 있을게요</p>
@@ -69,7 +69,7 @@
     <br>
     <br>
     <h2>
-        <div style="padding: 15px 0px 20px 0px">This Month Connected !!</div>
+        <div style="padding: 15px 0px 20px 0px" id="title">This Month Connected !!</div>
     </h2>
     {% if user.is_authenticated %}
         <p>{{ user.username }}님, 이번 달에 먼저 연락주셔서 너무 고마워요!</p>

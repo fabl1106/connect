@@ -18,7 +18,7 @@
 {% block content %}
     <br>
     <h2>
-        <div style="padding: 15px 0px 20px 0px">This Week Connect !</div>
+        <div style="padding: 15px 0px 20px 0px" id="title">This Week Connect !</div>
     </h2>
     {% if user.is_authenticated %}
         <p>{{ user.username }}님, 이번 주에는 꼭 연락주실거죠? 기다리구 있을게요</p>
@@ -69,7 +69,7 @@
     <br>
     <br>
     <h2>
-        <div style="padding: 15px 0px 20px 0px">This Week Connected !!</div>
+        <div style="padding: 15px 0px 20px 0px" id="title">This Week Connected !!</div>
     </h2>
     {% if user.is_authenticated %}
         <p>{{ user.username }}님, 먼저 연락주셔서 감사드려요! 행복합니다.</p>
