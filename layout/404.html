@@ -2,9 +2,15 @@
 
 {% block content %}
 
-<div class="alert alert-danger mt-5">
-    {{exception}}
-    
-</div>
-
+    <div class="alert alert-danger mt-5">
+        {{ exception }}
+    </div>
+    <div>
+        <a href="{% url 'friend:create' %}">
+            <button type="button" class="btn btn-primary">친구 추가하러 가기</button>
+        </a>
+        <a href="{% url 'friend:listall' %}">
+            <button type="button" class="btn btn-primary">친구 목록 가기</button>
+        </a>
+    </div>
 {% endblock %}
