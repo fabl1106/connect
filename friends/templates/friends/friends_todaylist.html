@@ -17,88 +17,89 @@
 {% endblock %}
 
 {% block content %}
-<br>
-<h2>
-    <div style="padding: 15px 0px 20px 0px" id="title">Today Connect!</div>
-</h2>
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Phone</th>
-        <th scope="col">Relation</th>
-        <th scope="col">최근 연락일</th>
-        <th scope="col">연락 예정</th>
-        <th scope="col">최근 소식</th>
-        <th scope="col">연락하셨나요?</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for object in object_list %}
-        {% if object.user == request.user %}
-             {% if forloop.counter <= 5 %}
-            {#                {% if object.scheduled_connect < datetime.now %}#}
-            <tr>
-                {#        <th scope="row">{{ object.id }}</th>#}
-                {#        <td><a href="{% url 'friend:detail' object.id %}">{{ object.friend_name }}</a></td>#}
-                <td onclick="detail1('{{ object.id }}')"><font color="#2E64FE">{{ object.friend_name }}</font></td>
-                <td>{{ object.friend_mobile }}</td>
-                <td>{{ object.friend_relation }}</td>
-                <td id="change{{ object.id }}">{{ object.latest_connect }}</td>
-                <td id="scheduled{{ object.id }}">{{ object.scheduled_connect }}</td>
-                <td class="memo">{{ object.recently_comment.comment_contents }}</td>
+    <br>
+    <h2>
+        <div style="padding: 15px 0px 20px 0px" id="title">Today Connect!</div>
+    </h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Relation</th>
+            <th scope="col">최근 연락일</th>
+            <th scope="col">연락 예정</th>
+            <th scope="col">최근 소식</th>
+            <th scope="col">연락하셨나요?</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for object in object_list %}
+            {% if object.user == request.user %}
+                {% if forloop.counter <= 5 %}#}
+                    {#               {% if object.scheduled_connect < datetime.now %}#}
+                    <tr>
+                        {#        <th scope="row">{{ object.id }}</th>#}
+                        {#        <td><a href="{% url 'friend:detail' object.id %}">{{ object.friend_name }}</a></td>#}
+                        <td onclick="detail1('{{ object.id }}')"><font color="#2E64FE">{{ object.friend_name }}</font>
+                        </td>
+                        <td>{{ object.friend_mobile }}</td>
+                        <td>{{ object.friend_relation }}</td>
+                        <td id="change{{ object.id }}">{{ object.latest_connect }}</td>
+                        <td id="scheduled{{ object.id }}">{{ object.scheduled_connect }}</td>
+                        <td class="memo">{{ object.recently_comment.comment_contents }}</td>
 
-                <td>
-                    <BUTTON onclick="connect('{{ object.id }}')">연락함</BUTTON>
-                </td>
-                {#                    <td><input type="checkbox" aria-label="Checkbox for following text input" id="Connect"></td>#}
+                        <td>
+                            <BUTTON onclick="connect('{{ object.id }}')">연락함</BUTTON>
+                        </td>
+                        {#                    <td><input type="checkbox" aria-label="Checkbox for following text input" id="Connect"></td>#}
 
-            </tr>
-                            {% endif %}
+                    </tr>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="detail1" class="col">
+        {% if user.is_authenticated %}
+            <p>{{ user.username }}님, 연락 하시기 전에 성함을 클릭하여 최근 소식을 확인해보세요!</p>
+            <p>연락을 하신 후에는 꼭 Comment를 남겨주시고 연락함을 클릭해주세요!</p>
+            <br>
+        {% else %}
+            <p>회원님이 오늘 연락해야 할 인연들에 대해서 알려드려요!</p>
+            <p>매일 매일 오늘 연락해야 될 인연들에 대해 연락을 하다보면 소중한 인연의 끈이 계속 이어질 거에요.</p>
+            <p>자세한 사항은 이후에 또 알려드릴게요!</p>
+            <br>
         {% endif %}
-    {% endfor %}
-    </tbody>
-</table>
-
-<div id="detail1" class="col">
-    {% if user.is_authenticated %}
-        <p>{{ user.username }}님, 연락 하시기 전에 성함을 클릭하여 최근 소식을 확인해보세요!</p>
-        <p>연락을 하신 후에는 꼭 Comment를 남겨주시고 연락함을 클릭해주세요!</p>
-        <br>
-    {% else %}
-        <p>회원님이 오늘 연락해야 할 인연들에 대해서 알려드려요!</p>
-        <p>매일 매일 오늘 연락해야 될 인연들에 대해 연락을 하다보면 소중한 인연의 끈이 계속 이어질 거에요.</p>
-        <p>자세한 사항은 이후에 또 알려드릴게요!</p>
-        <br>
-    {% endif %}
-    {#        {% load static %}#}
-    {#        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">#}
-    {#            <ol class="carousel-indicators">#}
-    {#                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>#}
-    {#                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>#}
-    {#                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>#}
-    {#            </ol>#}
-    {#            <div class="carousel-inner">#}
-    {#                <div class="carousel-item active" data-interval="5000">#}
-    {#                    <img src="{% static 'images/main2.jpeg' %}" class="d-block w-100" alt="...">#}
-    {#                </div>#}
-    {#                <div class="carousel-item" data-interval="5000">#}
-    {#                    <img src="{% static 'images/main3.jpeg' %}" class="d-block w-100" alt="...">#}
-    {#                </div>#}
-    {#                <div class="carousel-item" data-interval="5000">#}
-    {#                    <img src="{% static 'images/main4.jpeg' %}" class="d-block w-100" alt="...">#}
-    {#                </div>#}
-    {#            </div>#}
-    {#            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">#}
-    {#                <span class="carousel-control-prev-icon" aria-hidden="true"></span>#}
-    {#                <span class="sr-only">Previous</span>#}
-    {#            </a>#}
-    {#            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">#}
-    {#                <span class="carousel-control-next-icon" aria-hidden="true"></span>#}
-    {#                <span class="sr-only">Next</span>#}
-    {#            </a>#}
-    {#        </div>#}
-</div>
+        {#        {% load static %}#}
+        {#        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">#}
+        {#            <ol class="carousel-indicators">#}
+        {#                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>#}
+        {#                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>#}
+        {#                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>#}
+        {#            </ol>#}
+        {#            <div class="carousel-inner">#}
+        {#                <div class="carousel-item active" data-interval="5000">#}
+        {#                    <img src="{% static 'images/main2.jpeg' %}" class="d-block w-100" alt="...">#}
+        {#                </div>#}
+        {#                <div class="carousel-item" data-interval="5000">#}
+        {#                    <img src="{% static 'images/main3.jpeg' %}" class="d-block w-100" alt="...">#}
+        {#                </div>#}
+        {#                <div class="carousel-item" data-interval="5000">#}
+        {#                    <img src="{% static 'images/main4.jpeg' %}" class="d-block w-100" alt="...">#}
+        {#                </div>#}
+        {#            </div>#}
+        {#            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">#}
+        {#                <span class="carousel-control-prev-icon" aria-hidden="true"></span>#}
+        {#                <span class="sr-only">Previous</span>#}
+        {#            </a>#}
+        {#            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">#}
+        {#                <span class="carousel-control-next-icon" aria-hidden="true"></span>#}
+        {#                <span class="sr-only">Next</span>#}
+        {#            </a>#}
+        {#        </div>#}
+    </div>
 {% endblock %}
 {% block extra_script %}
     <script type="text/javascript">
