@@ -35,8 +35,8 @@
         </thead>
         <tbody>
         {% for object in object_list %}
-            {% if object.user == request.user %}
-                {% if forloop.counter <= 5 %}#}
+{#            {% if object.user == request.user %}#}
+{#                {% if forloop.counter <= 10 %}#}
                     {#               {% if object.scheduled_connect < datetime.now %}#}
                     <tr>
                         {#        <th scope="row">{{ object.id }}</th>#}
@@ -55,8 +55,8 @@
                         {#                    <td><input type="checkbox" aria-label="Checkbox for following text input" id="Connect"></td>#}
 
                     </tr>
-                {% endif %}
-            {% endif %}
+{#                {% endif %}#}
+{#            {% endif %}#}
         {% endfor %}
         </tbody>
     </table>

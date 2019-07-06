@@ -29,7 +29,10 @@ class FriendTodayList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['object_list'] = Friends.objects.filter(scheduled_connect__lte=date.today())
+        # Friends.objects.user.id == self.request.user.id
+        context['object_list'] = Friends.objects.filter(scheduled_connect__lte=date.today(), user_id=self.request.user.id)[:5]
+        # print(context['object_list'])
+        # print(len(context['object_list']))
         for object in context['object_list']:
             object.recently_comment = object.comment.all()[0] if object.comment.all() else None
         return context
@@ -56,8 +59,8 @@ class FriendWeekList(ListView):
         this_week_q = Q(scheduled_connect__month=month,scheduled_connect__day__gte=monday, scheduled_connect__day__lte=sunday)
         past_day_q = Q(scheduled_connect__lte=date.today())
         this_week_connected_q = Q(latest_connect__month=month, latest_connect__day__gte=monday, latest_connect__day__lte=sunday)
-        context['object_list'] = Friends.objects.filter(this_week_q | past_day_q)
-        context['this_week_connected'] = Friends.objects.filter(this_week_connected_q)
+        context['object_list'] = Friends.objects.filter(this_week_q | past_day_q, user_id=self.request.user.id )
+        context['this_week_connected'] = Friends.objects.filter(this_week_connected_q, user_id=self.request.user.id)
         for object in context['object_list']:
             object.recently_comment = object.comment.all()[0] if object.comment.all() else None
         for object in context['this_week_connected']:
@@ -87,8 +90,8 @@ class FriendMonthList(ListView):
         #         if ob_all.exists():
         #             object.recently_comment=ob_all[0]
 
-        context['object_list'] = Friends.objects.filter(this_month_q | past_day_q)
-        context['this_month_connected'] = Friends.objects.filter(this_month_connected_q)
+        context['object_list'] = Friends.objects.filter(this_month_q | past_day_q, user_id=self.request.user.id)
+        context['this_month_connected'] = Friends.objects.filter(this_month_connected_q, user_id=self.request.user.id)
         for object in context['object_list']:
             object.recently_comment = object.comment.all()[0] if object.comment.all() else None
         for object in context['this_month_connected']:

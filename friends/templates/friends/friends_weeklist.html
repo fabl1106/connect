@@ -37,7 +37,7 @@
         </thead>
         <tbody>
         {% for object in object_list %}
-            {% if object.user == request.user %}
+{#            {% if object.user == request.user %}#}
                 {# {% if forloop.counter <= 5 %} #}
                 {#                {% if object.scheduled_connect < datetime.now %}#}
                 <tr>
@@ -57,7 +57,7 @@
 
                 </tr>
                 {#                {% endif %}#}
-            {% endif %}
+{#            {% endif %}#}
         {% endfor %}
         </tbody>
     </table>
@@ -89,7 +89,7 @@
 
         <tbody>
         {% for object in this_week_connected %}
-            {% if object.user == request.user %}
+{#            {% if object.user == request.user %}#}
                 {# {% if forloop.counter <= 5 %} #}
                 {#                {% if object.scheduled_connect < datetime.now %}#}
                 <tr>
@@ -109,7 +109,7 @@
 
                 </tr>
                 {#                {% endif %}#}
-            {% endif %}
+{#            {% endif %}#}
         {% endfor %}
         </tbody>
     </table>
