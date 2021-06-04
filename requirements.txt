@@ -1,6 +1,6 @@
 boto3==1.9.156
 botocore==1.12.156
-Django==2.2
+Django==2.2.21
 django-debug-toolbar==1.11
 django-extensions==2.1.7
 django-storages==1.7.1
